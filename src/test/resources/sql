@@ -1,0 +1,10 @@
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL,
+  `uname` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL COMMENT '0为未登录,1为已登录',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `sbdemo`.`user` (`uname`, `password`, `status`) VALUES ('jack ma', '123', '1');
+INSERT INTO `sbdemo`.`user` (`uname`, `password`, `status`) VALUES ('tencent ma', '123', '0');
+INSERT INTO `sbdemo`.`user` (`uname`, `password`, `status`) VALUES ('yanhong li', '123', '1');

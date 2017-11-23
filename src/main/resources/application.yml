@@ -1,0 +1,36 @@
+spring:
+  mvc:
+    view:
+      suffix: .jsp
+      prefix: /WEB-INF/views/
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/sbdemo?useUnicode=true&amp;characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: meiHouWang520
+    driver-class-name: com.mysql.jdbc.Driver
+    initialSize: 10
+    minIdle: 1
+    maxActive: 20
+    maxWait: 30000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 30000
+    validationQuery: SELECT 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat
+
+mybatis:
+  type-aliases-package: com.example.demo.model
+  config-location: classpath:spring-mybatis.xml
+  mapper-locations: classpath:mapper/*.xml
+
+
+pagehelper:
+  dialect: com.github.pagehelper.dialect.helper.MySqlDialect
