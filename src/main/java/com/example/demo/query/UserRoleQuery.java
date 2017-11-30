@@ -10,18 +10,13 @@ import java.util.Map;
 /**
  * @author Wing.
  */
-public class UserQuery {
+public class UserRoleQuery {
 
     private Integer id;
 
-    private String uname;
+    private Integer uid;
 
-    private String password;
-
-    private Integer status;
-
-    // 【排除状态查询】
-    private Integer statusExclude;
+    private Integer role;
 
     // 【in查询使用，形式：1,2,3,4,5】
     private String ids;
@@ -43,7 +38,7 @@ public class UserQuery {
         return ids;
     }
 
-    public UserQuery withIds(String ids) {
+    public UserRoleQuery withIds(String ids) {
         this.ids = ids;
         return this;
     }
@@ -52,7 +47,7 @@ public class UserQuery {
         return sortStr;
     }
 
-    public UserQuery withSortStr(String sortStr) {
+    public UserRoleQuery withSortStr(String sortStr) {
         this.sortStr = sortStr;
         return this;
     }
@@ -61,7 +56,7 @@ public class UserQuery {
         return selectType;
     }
 
-    public UserQuery withSelectType(Map<String, Integer> selectType) {
+    public UserRoleQuery withSelectType(Map<String, Integer> selectType) {
         this.selectType = selectType;
         return this;
     }
@@ -74,17 +69,17 @@ public class UserQuery {
         return limit;
     }
 
-    public UserQuery withOffset(Integer offset) {
+    public UserRoleQuery withOffset(Integer offset) {
         this.offset = offset;
         return this;
     }
 
-    public UserQuery withLimit(Integer limit) {
+    public UserRoleQuery withLimit(Integer limit) {
         this.limit = limit;
         return this;
     }
 
-    public UserQuery withPaging(Integer page, Integer pageSize) {
+    public UserRoleQuery withPaging(Integer page, Integer pageSize) {
         this.offset = (page - 1) * pageSize;
         this.limit = pageSize;
         return this;
@@ -94,12 +89,12 @@ public class UserQuery {
         return leftJoinDTO;
     }
 
-    public UserQuery withLeftJoinDTO(LeftJoinDTO leftJoinDTO){
+    public UserRoleQuery withLeftJoinDTO(LeftJoinDTO leftJoinDTO){
         this.leftJoinDTO = leftJoinDTO;
         return this;
     }
 
-    public UserQuery withId(Integer id) {
+    public UserRoleQuery withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -108,40 +103,22 @@ public class UserQuery {
         return this.id;
     }
 
-    public UserQuery withUname(String uname) {
-        this.uname = uname;
+    public UserRoleQuery withUid(Integer uid) {
+        this.uid = uid;
         return this;
     }
 
-    public String getUname() {
-        return this.uname;
+    public Integer getUid() {
+        return this.uid;
     }
 
-    public UserQuery withPassword(String password) {
-        this.password = password;
+    public UserRoleQuery withRole(Integer role) {
+        this.role = role;
         return this;
     }
 
-    public String getPassword() {
-        return this.password;
-    }
-
-    public UserQuery withStatus(Integer status) {
-        this.status = status;
-        return this;
-    }
-
-    public Integer getStatus() {
-        return this.status;
-    }
-
-    public UserQuery withStatusExclude(Integer statusExclude) {
-        this.statusExclude = statusExclude;
-        return this;
-    }
-
-    public Integer getStatusExclude() {
-        return this.statusExclude;
+    public Integer getRole() {
+        return this.role;
     }
 
 

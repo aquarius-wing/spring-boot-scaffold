@@ -2,8 +2,8 @@
  package com.example.demo.dao;
 
 import com.example.demo.dao.base.BaseDao;
-import com.example.demo.model.User;
-import com.example.demo.query.UserQuery;
+import com.example.demo.model.UserRole;
+import com.example.demo.query.UserRoleQuery;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,6 +11,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 
  @Mapper
-public interface UserDao extends BaseDao<User, UserQuery>{
+public interface UserRoleDao extends BaseDao<UserRole, UserRoleQuery>{
 
 }

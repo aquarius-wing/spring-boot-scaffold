@@ -3,8 +3,8 @@
 <#assign classNameFirstLower = table.classNameFirstLower>
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
-        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <#macro mapperEl value>${r"#{"}${value}}</#macro>
 <#macro namespace>${className}.</#macro>
@@ -21,7 +21,7 @@
     <!-- 用于select查询公用抽取的列 -->
     <sql id="columns">
         <![CDATA[
-        <#list table.columns as column>${column.sqlName}<#if column_has_next>, </#if></#list>
+        <#list table.columns as column>${table.sqlName}.${column.sqlName}<#if column_has_next>, </#if></#list>
         ]]>
     </sql>
 
@@ -30,7 +30,7 @@
     <![CDATA[
         INSERT INTO ${table.sqlName} (
         <#list table.columns as column>
-            ${column.sqlName} <#if column_has_next>,</#if>
+            ${table.sqlName}.${column.sqlName} <#if column_has_next>,</#if>
         </#list>
         ) VALUES (
         <#list table.columns as column>
@@ -44,7 +44,7 @@
     <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
         INSERT INTO ${table.sqlName} (
             <#list table.columns as column>
-                ${column.sqlName} <#if column_has_next>,</#if>
+                ${table.sqlName}.${column.sqlName} <#if column_has_next>,</#if>
             </#list>
         ) VALUES
         <foreach collection="list" item="item" index="index" separator="," >
@@ -58,24 +58,24 @@
 
     <sql id="update_sql">
         <set>
-              <#list table.notPkColumns as column>
-            <#if column.isDateTimeColumn && column.sqlName != "create_time" && column.sqlName != "update_time">
-            <if test="${column.columnNameFirstLower} != null">
-                 ${column.sqlName} = <@mapperEl column.columnNameFirstLower/> <#if column_has_next>,</#if>
-               </if>
-            </#if>
-               <#if column.isNumberColumn>
-            <if test="${column.columnNameFirstLower} != null">
-                ${column.sqlName} = <@mapperEl column.columnNameFirstLower/> <#if column_has_next>,</#if>
-            </if>
-            </#if>
-            <#if column.isStringColumn>
-                <if test="${column.columnNameFirstLower} != null and ${column.columnNameFirstLower} != ''">
-                 ${column.sqlName} = <@mapperEl column.columnNameFirstLower/> <#if column_has_next>,</#if>
-            </if>
-               </#if>
-             </#list>
-            update_time = now(),
+            <#list table.notPkColumns as column>
+                <#if column.isDateTimeColumn && column.sqlName != "create_time" && column.sqlName != "update_time">
+                    <if test="${column.columnNameFirstLower} != null">
+                         ${table.sqlName}.${column.sqlName} = <@mapperEl column.columnNameFirstLower/> <#if column_has_next>,</#if>
+                    </if>
+                </#if>
+                <#if column.isNumberColumn>
+                    <if test="${column.columnNameFirstLower} != null">
+                        ${table.sqlName}.${column.sqlName} = <@mapperEl column.columnNameFirstLower/> <#if column_has_next>,</#if>
+                    </if>
+                </#if>
+                <#if column.isStringColumn>
+                    <if test="${column.columnNameFirstLower} != null and ${column.columnNameFirstLower} != ''">
+                     ${table.sqlName}.${column.sqlName} = <@mapperEl column.columnNameFirstLower/> <#if column_has_next>,</#if>
+                    </if>
+                </#if>
+            </#list>
+
         </set>
     </sql>
 
@@ -84,7 +84,7 @@
         <include refid="update_sql" />
             WHERE
                 <#list table.compositeIdColumns as column>
-                    ${column.sqlName} = <@mapperEl column.columnNameLower/> <#if column_has_next> AND </#if>
+                    ${table.sqlName}.${column.sqlName} = <@mapperEl column.columnNameLower/> <#if column_has_next> AND </#if>
                 </#list>
     </update>
 
@@ -92,7 +92,7 @@
     <![CDATA[
         DELETE FROM ${table.sqlName} WHERE
         <#list table.compositeIdColumns as column>
-        ${column.sqlName} = <@mapperEl 'id'/> <#if column_has_next> AND </#if>
+        ${table.sqlName}.${column.sqlName} = <@mapperEl 'id'/> <#if column_has_next> AND </#if>
         </#list>
     ]]>
     </delete>
@@ -110,41 +110,49 @@
             FROM ${table.sqlName} 
             WHERE 
                 <#list table.compositeIdColumns as column>
-                ${column.sqlName} = <@mapperEl 'id'/> <#if column_has_next> AND </#if>
+                ${table.sqlName}.${column.sqlName} = <@mapperEl 'id'/> <#if column_has_next> AND </#if>
                 </#list>    
         ]]>
     </select>
 
+    <sql id="leftJoin_on">
+        <if test="leftJoinDTO != null">
+            left join <@jspEl 'leftJoinDTO.leftTableName'/> on <@jspEl 'leftJoinDTO.leftTableName'/>.<@jspEl 'leftJoinDTO.leftColumn'/> = <@jspEl 'leftJoinDTO.rightTableName'/>.<@jspEl 'leftJoinDTO.rightColumn'/>
+        </if>
+    </sql>
     <sql id="findPage_where">
         <!-- ognl访问静态方法的表达式 为@class@method(args),以下为调用rapid中的Ognl.isNotEmpty()方法,还有其它方法如isNotBlank()可以使用，具体请查看Ognl类 -->
         <where>
+            <if test="leftJoinDTO != null and leftJoinDTO.targetValue !=null">
+                AND <@jspEl 'leftJoinDTO.leftTableName'/>.<@jspEl 'leftJoinDTO.targetColumn'/> = <@jspEl 'leftJoinDTO.targetValue'/>
+            </if>
                <#list table.columns as column>
             <#if column.sqlName == "status">
             <if test="${column.columnNameFirstLower}Exclude != null">
-                AND ${column.sqlName} != <@mapperEl column.columnNameFirstLower+"Exclude"/>
+                AND ${table.sqlName}.${column.sqlName} != <@mapperEl column.columnNameFirstLower+"Exclude"/>
             </if>
             </#if>
                <#if column.isDateTimeColumn>
             <if test="${column.columnNameFirstLower}Begin != null">
-                AND ${column.sqlName} >= <@mapperEl column.columnNameFirstLower+"Begin"/>
+                AND ${table.sqlName}.${column.sqlName} >= <@mapperEl column.columnNameFirstLower+"Begin"/>
             </if>
             <if test="${column.columnNameFirstLower}End != null">
-                AND ${column.sqlName} &lt;= <@mapperEl column.columnNameFirstLower+"End"/>
+                AND ${table.sqlName}.${column.sqlName} &lt;= <@mapperEl column.columnNameFirstLower+"End"/>
             </if>
                <#else>
                <#if column.isNumberColumn>
             <if test="${column.columnNameFirstLower} != null">
-                AND ${column.sqlName} = <@mapperEl column.columnNameFirstLower/>
+                AND ${table.sqlName}.${column.sqlName} = <@mapperEl column.columnNameFirstLower/>
             </if>
                </#if>
             <#if column.isStringColumn>
             <if test="${column.columnNameFirstLower} != null and ${column.columnNameFirstLower} !=''">
                 <choose>
                     <when test="selectType['${column.columnNameFirstLower}']==1">
-                        AND ${column.sqlName} like CONCAT('%', <@mapperEl column.columnNameFirstLower/>, '%')
+                        AND ${table.sqlName}.${column.sqlName} like CONCAT('%', <@mapperEl column.columnNameFirstLower/>, '%')
                     </when>
                     <otherwise>
-                        AND ${column.sqlName} = <@mapperEl column.columnNameFirstLower/>
+                        AND ${table.sqlName}.${column.sqlName} = <@mapperEl column.columnNameFirstLower/>
                     </otherwise>
                 </choose>
             </if>
@@ -159,21 +167,18 @@
 
     <select id="findPage_count" resultType="long">
         SELECT count(*) FROM ${table.sqlName}
+        <include refid="leftJoin_on"/>
         <include refid="findPage_where"/>
     </select>
 
     <select id="selectListByCondition" resultMap="RM_${className}">
         SELECT <include refid="columns" />
         FROM ${table.sqlName}
+        <include refid="leftJoin_on"/>
         <include refid="findPage_where"/>
 
-        <if test="sortColumns != null and sortColumns != ''">
-            <if test="sortType == 1">
-                ORDER BY <@jspEl 'sortColumns'/> DESC
-            </if>
-            <if test="sortType == 0">
-                ORDER BY <@jspEl 'sortColumns'/>
-            </if>
+        <if test="sortStr != null and sortStr != ''">
+            ORDER BY <@jspEl 'sortStr'/>
         </if>
         <if test="offset != null and limit != null">
             LIMIT <@jspEl 'offset'/>, <@jspEl 'limit'/>
@@ -188,13 +193,8 @@
         FROM ${table.sqlName}
         <include refid="findPage_where"/>
 
-        <if test="sortColumns != null and sortColumns != ''">
-            <if test="sortType == 1">
-                ORDER BY <@jspEl 'sortColumns'/> DESC
-            </if>
-            <if test="sortType == 0">
-                ORDER BY <@jspEl 'sortColumns'/>
-            </if>
+        <if test="sortStr != null and sortStr != ''">
+            ORDER BY <@jspEl 'sortStr'/>
         </if>
     </select>
 

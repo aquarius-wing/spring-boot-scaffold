@@ -10,25 +10,25 @@ public class User {
 
     /**
      * 描述: id
-     * 字段: id  INT(10)
+     * 字段: id  int(10)
      */
     private Integer id;
 
     /**
      * 描述: uname
-     * 字段: uname  VARCHAR(255)
+     * 字段: uname  varchar(255)
      */
     private String uname;
 
     /**
      * 描述: password
-     * 字段: password  VARCHAR(255)
+     * 字段: password  varchar(255)
      */
     private String password;
 
     /**
      * 描述: 0为未登录,1为已登录
-     * 字段: status  INT(10)
+     * 字段: status  int(10)
      */
     private Integer status;
 

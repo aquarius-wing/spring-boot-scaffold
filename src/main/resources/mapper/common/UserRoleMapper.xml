@@ -4,99 +4,91 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 不使用namespace的话sql搜索定位会比较方便 -->
-<mapper namespace="com.example.demo.dao.UserDao">
+<mapper namespace="com.example.demo.dao.UserRoleDao">
 
-    <resultMap id="RM_User" type="com.example.demo.model.User">
+    <resultMap id="RM_UserRole" type="com.example.demo.model.UserRole">
         <result property="id" column="id"/>
-        <result property="uname" column="uname"/>
-        <result property="password" column="password"/>
-        <result property="status" column="status"/>
+        <result property="uid" column="uid"/>
+        <result property="role" column="role"/>
     </resultMap>
 
     <!-- 用于select查询公用抽取的列 -->
     <sql id="columns">
         <![CDATA[
-        user.id, user.uname, user.password, user.status
+        user_role.id, user_role.uid, user_role.role
         ]]>
     </sql>
 
     <!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
     <![CDATA[
-        INSERT INTO user (
-            user.id ,
-            user.uname ,
-            user.password ,
-            user.status 
+        INSERT INTO user_role (
+            user_role.id ,
+            user_role.uid ,
+            user_role.role 
         ) VALUES (
             #{id},
-            #{uname},
-            #{password},
-            #{status}
+            #{uid},
+            #{role}
         )
     ]]>
     </insert>
 
     <!-- batch-insert-Object -->
     <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
-        INSERT INTO user (
-                user.id ,
-                user.uname ,
-                user.password ,
-                user.status 
+        INSERT INTO user_role (
+                user_role.id ,
+                user_role.uid ,
+                user_role.role 
         ) VALUES
         <foreach collection="list" item="item" index="index" separator="," >
             (
                 #{item.id},
-                #{item.uname},
-                #{item.password},
-                #{item.status}
+                #{item.uid},
+                #{item.role}
                )
         </foreach>
     </insert>
 
     <sql id="update_sql">
         <set>
-                    <if test="uname != null and uname != ''">
-                     user.uname = #{uname} ,
+                    <if test="uid != null">
+                        user_role.uid = #{uid} ,
                     </if>
-                    <if test="password != null and password != ''">
-                     user.password = #{password} ,
-                    </if>
-                    <if test="status != null">
-                        user.status = #{status} 
+                    <if test="role != null">
+                        user_role.role = #{role} 
                     </if>
 
         </set>
     </sql>
 
     <update id="update" >
-            UPDATE  user
+            UPDATE  user_role
         <include refid="update_sql" />
             WHERE
-                    user.id = #{id} 
+                    user_role.id = #{id} 
     </update>
 
     <delete id="delete">
     <![CDATA[
-        DELETE FROM user WHERE
-        user.id = #{id} 
+        DELETE FROM user_role WHERE
+        user_role.id = #{id} 
     ]]>
     </delete>
 
     <delete id="delete_batch_list">
-        DELETE FROM user WHERE id IN
+        DELETE FROM user_role WHERE id IN
         <foreach item="item" collection="list" open="(" separator="," close=")">
             #{item}
         </foreach>
     </delete>
 
-    <select id="getById" resultMap="RM_User">
+    <select id="getById" resultMap="RM_UserRole">
         SELECT <include refid="columns" />
         <![CDATA[
-            FROM user 
+            FROM user_role 
             WHERE 
-                user.id = #{id} 
+                user_role.id = #{id} 
         ]]>
     </select>
 
@@ -112,33 +104,13 @@
                 AND ${leftJoinDTO.leftTableName}.${leftJoinDTO.targetColumn} = ${leftJoinDTO.targetValue}
             </if>
             <if test="id != null">
-                AND user.id = #{id}
+                AND user_role.id = #{id}
             </if>
-            <if test="uname != null and uname !=''">
-                <choose>
-                    <when test="selectType['uname']==1">
-                        AND user.uname like CONCAT('%', #{uname}, '%')
-                    </when>
-                    <otherwise>
-                        AND user.uname = #{uname}
-                    </otherwise>
-                </choose>
+            <if test="uid != null">
+                AND user_role.uid = #{uid}
             </if>
-            <if test="password != null and password !=''">
-                <choose>
-                    <when test="selectType['password']==1">
-                        AND user.password like CONCAT('%', #{password}, '%')
-                    </when>
-                    <otherwise>
-                        AND user.password = #{password}
-                    </otherwise>
-                </choose>
-            </if>
-            <if test="statusExclude != null">
-                AND user.status != #{statusExclude}
-            </if>
-            <if test="status != null">
-                AND user.status = #{status}
+            <if test="role != null">
+                AND user_role.role = #{role}
             </if>
             <if test="ids != null and ids !=''">
                 AND id in (${ids})
@@ -147,14 +119,14 @@
     </sql>
 
     <select id="findPage_count" resultType="long">
-        SELECT count(*) FROM user
+        SELECT count(*) FROM user_role
         <include refid="leftJoin_on"/>
         <include refid="findPage_where"/>
     </select>
 
-    <select id="selectListByCondition" resultMap="RM_User">
+    <select id="selectListByCondition" resultMap="RM_UserRole">
         SELECT <include refid="columns" />
-        FROM user
+        FROM user_role
         <include refid="leftJoin_on"/>
         <include refid="findPage_where"/>
 
@@ -171,7 +143,7 @@
 
     <select id="selectIdsByCondition" resultType="long">
         SELECT id
-        FROM user
+        FROM user_role
         <include refid="findPage_where"/>
 
         <if test="sortStr != null and sortStr != ''">
@@ -179,9 +151,9 @@
         </if>
     </select>
 
-    <select id="selectBatchByIds" resultMap="RM_User">
+    <select id="selectBatchByIds" resultMap="RM_UserRole">
         SELECT <include refid="columns" />
-        FROM user
+        FROM user_role
         WHERE id IN
         <foreach item="item" collection="list" open="(" separator="," close=")">
             #{item}

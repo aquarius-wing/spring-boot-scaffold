@@ -1,10 +1,38 @@
+-- ----------------------------
+-- Table structure for user
+-- ----------------------------
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `uname` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL COMMENT '0为未登录,1为已登录',
+  `status` int(255) DEFAULT NULL COMMENT '0为未登录,1为已登录',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO `sbdemo`.`user` (`uname`, `password`, `status`) VALUES ('jack ma', '123', '1');
-INSERT INTO `sbdemo`.`user` (`uname`, `password`, `status`) VALUES ('tencent ma', '123', '0');
-INSERT INTO `sbdemo`.`user` (`uname`, `password`, `status`) VALUES ('yanhong li', '123', '1');
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of user
+-- ----------------------------
+INSERT INTO `user` VALUES ('1', 'jack ma', '123', '1');
+INSERT INTO `user` VALUES ('2', 'tencent ma', '123', '0');
+INSERT INTO `user` VALUES ('3', 'yanhong li', '123', '1');
+INSERT INTO `user` VALUES ('4', 'yonghao lo', '123', '1');
+
+-- ----------------------------
+-- Table structure for user_role
+-- ----------------------------
+DROP TABLE IF EXISTS `user_role`;
+CREATE TABLE `user_role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) DEFAULT NULL,
+  `role` int(11) DEFAULT '0' COMMENT '0是普通用户,1是高级会员,2是终极会员',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of user_role
+-- ----------------------------
+INSERT INTO `user_role` VALUES ('1', '1', '0');
+INSERT INTO `user_role` VALUES ('2', '2', '1');
+INSERT INTO `user_role` VALUES ('3', '3', '2');
+INSERT INTO `user_role` VALUES ('4', '4', '1');

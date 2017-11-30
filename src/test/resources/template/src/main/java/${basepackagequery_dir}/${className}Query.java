@@ -4,12 +4,14 @@
 <#assign classNameLower = className?uncap_first>
 package ${basepackagequery};
 
+import ${basepackagedto}.LeftJoinDTO;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by rapid-generator.
+ * @author Wing.
  */
 public class ${className}Query {
     <#list table.columns as column>
@@ -31,9 +33,8 @@ public class ${className}Query {
     // 【in查询使用，形式：1,2,3,4,5】
     private String ids;
 
-    // 【排序】
-    private String sortColumns;
-    private int sortType;
+    // 【排序字符串】
+    private String sortStr;
 
     // 【like】
     private Map<String, Integer> selectType = new HashMap<>();
@@ -41,6 +42,9 @@ public class ${className}Query {
     // 【分页】
     private Integer offset;
     private Integer limit;
+
+    // 【左连接集合】
+    private LeftJoinDTO leftJoinDTO;
 
     <@generateJavaColumns/>
     <@generateJavaOneToMany/>
@@ -58,21 +62,12 @@ public class ${className}Query {
         return this;
     }
 
-    public String getSortColumns() {
-        return sortColumns;
+    public String getSortStr() {
+        return sortStr;
     }
 
-    public ${className}Query withSortColumns(String sortColumns) {
-        this.sortColumns = sortColumns;
-        return this;
-    }
-
-    public int getSortType() {
-        return sortType;
-    }
-
-    public ${className}Query withSortType(int sortType) {
-        this.sortType = sortType;
+    public ${className}Query withSortStr(String sortStr) {
+        this.sortStr = sortStr;
         return this;
     }
 
@@ -106,6 +101,15 @@ public class ${className}Query {
     public ${className}Query withPaging(Integer page, Integer pageSize) {
         this.offset = (page - 1) * pageSize;
         this.limit = pageSize;
+        return this;
+    }
+
+    public LeftJoinDTO getLeftJoinDTO(){
+        return leftJoinDTO;
+    }
+
+    public ${className}Query withLeftJoinDTO(LeftJoinDTO leftJoinDTO){
+        this.leftJoinDTO = leftJoinDTO;
         return this;
     }
 
