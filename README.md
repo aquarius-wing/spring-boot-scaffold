@@ -12,7 +12,7 @@ spring boot/mybatis/rapid-generator
 # 运行结果
 如果数据和sql文件一致的话
 运行后网页上会显示
-> hello tencent ma , yonghao lo !
+> hello tencent ma , yonghao lo ! 
 
 # 2017-11-30更新
 - query中的排序支持直接写字符串,从而支持多字段自定义排序,
