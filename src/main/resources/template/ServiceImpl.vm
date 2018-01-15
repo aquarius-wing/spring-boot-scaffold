@@ -1,11 +1,11 @@
-package ${package_name}.rpc.service.impl;
+package ${package_name}.service.impl;
 
-import com.zheng.common.annotation.BaseService;
-import com.zheng.common.base.BaseServiceImpl;
+import com.example.demo.common.annotation.BaseService;
+import com.example.demo.common.base.BaseServiceImpl;
 import ${package_name}.dao.mapper.${model}Mapper;
 import ${package_name}.dao.model.${model};
 import ${package_name}.dao.model.${model}Example;
-import ${package_name}.rpc.api.${model}Service;
+import ${package_name}.service.${model}Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
