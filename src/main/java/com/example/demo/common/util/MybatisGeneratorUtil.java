@@ -81,10 +81,10 @@ public class MybatisGeneratorUtil {
 			JdbcUtil jdbcUtil = new JdbcUtil(jdbcDriver, jdbcUrl, jdbcUsername, AESUtil.aesDecode(jdbcPassword));
 			List<Map> result = jdbcUtil.selectByParams(sql, null);
 			for (Map map : result) {
-				System.out.println(map.get("TABLE_NAME"));
+				System.out.println(map.get("table_name"));
 				table = new HashMap<>(2);
 				table.put("table_name", map.get("table_name"));
-				table.put("model_name", lineToHump(ObjectUtils.toString(map.get("TABLE_NAME"))));
+				table.put("model_name", lineToHump(ObjectUtils.toString(map.get("table_name"))));
 				tables.add(table);
 			}
 			jdbcUtil.release();

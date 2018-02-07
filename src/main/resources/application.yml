@@ -27,10 +27,17 @@ spring:
     filters: stat
 
 mybatis:
-  type-aliases-package: com.example.demo.model
+  type-aliases-package: com.example.demo.dao.model
   config-location: classpath:spring-mybatis.xml
-  mapper-locations: classpath:mapper/*.xml
+  mapper-locations: classpath:com/example/demo/mapper/*.xml
 
 
 pagehelper:
   dialect: com.github.pagehelper.dialect.helper.MySqlDialect
+security:
+  basic:
+    path: /swagger-ui.html
+    enabled: true
+  user:
+    name: dshw
+    password: dshw0523

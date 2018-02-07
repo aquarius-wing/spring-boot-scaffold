@@ -24,15 +24,35 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
     <![CDATA[
         INSERT INTO user (
-            user.id ,
-            user.uname ,
-            user.password ,
-            user.status 
+        <set>
+                <if test="id != null">
+                    user.id ,
+                </if>
+                <if test="uname != null">
+                    user.uname ,
+                </if>
+                <if test="password != null">
+                    user.password ,
+                </if>
+                <if test="status != null">
+                    user.status 
+                </if>
+        </set>
         ) VALUES (
-            #{id},
-            #{uname},
-            #{password},
-            #{status}
+        <set>
+                <if test="id != null">
+                    #{id},
+                </if>
+                <if test="uname != null">
+                    #{uname},
+                </if>
+                <if test="password != null">
+                    #{password},
+                </if>
+                <if test="status != null">
+                    #{status}
+                </if>
+        </set>
         )
     ]]>
     </insert>

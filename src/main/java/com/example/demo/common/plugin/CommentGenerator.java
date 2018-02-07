@@ -1,8 +1,10 @@
 package com.example.demo.common.plugin;
 
+import com.example.demo.common.util.StringUtil;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.Field;
+import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
 import org.mybatis.generator.internal.DefaultCommentGenerator;
 
@@ -19,13 +21,22 @@ public class CommentGenerator extends DefaultCommentGenerator {
 			field.addJavaDocLine("/**");
 			field.addJavaDocLine(" * 描述: " + introspectedColumn.getRemarks());
             field.addJavaDocLine(" * 字段: " + introspectedColumn.getActualColumnName() + "  "+introspectedColumn.getJdbcTypeName()+" ("+introspectedColumn.getLength()+")");
-			// addJavadocTag(field, false);
 			field.addJavaDocLine(" */");
-            field.addAnnotation("@ApiModelProperty(name = \""+introspectedColumn.getRemarks()+"\")");
+            if(introspectedColumn.getJdbcType() == 93) {
+                field.addJavaDocLine("@DateTimeFormat(pattern = \"yyyy-MM-dd HH:mm:ss\")");
+            }
 
 
 		}
 	}
+
+    @Override
+    public void addGetterComment(Method method, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
+        super.addGetterComment(method, introspectedTable, introspectedColumn);
+        if(!StringUtil.isEmpty(introspectedColumn.getRemarks())) {
+            method.addAnnotation("@ApiModelProperty(value = \"" + introspectedColumn.getRemarks().replaceAll("\\\"","\\\\\"") + "\")");
+        }
+    }
 
     @Override
     public void addModelClassComment(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
@@ -37,16 +48,13 @@ public class CommentGenerator extends DefaultCommentGenerator {
         StringBuilder sb = new StringBuilder();
         //添加类注释
         topLevelClass.addJavaDocLine("/**");
-        sb.append(" * "+ remarks);
-        sb.append("\n");
-        sb.append(" * 实体类对应的数据表为：  ");
-        sb.append(introspectedTable.getFullyQualifiedTable());
+        sb.append(" * ");
         topLevelClass.addJavaDocLine(sb.toString());
-        topLevelClass.addJavaDocLine(" * @author " + author);
+        topLevelClass.addJavaDocLine(" * @author wing");
 
         //添加时间
         topLevelClass.addJavaDocLine(" * @date " + getDateString());
         topLevelClass.addJavaDocLine(" */");
-        topLevelClass.addJavaDocLine("@ApiModel(value =\"" + entityName + "\")");
+        topLevelClass.addJavaDocLine("@ApiModel(value = \"" + introspectedTable.getRemarks() + "\")");
     }
 }

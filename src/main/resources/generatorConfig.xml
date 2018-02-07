@@ -50,26 +50,19 @@
         <jdbcConnection driverClass="${generator.jdbc.driver}"
                         connectionURL="${generator.jdbc.url}"
                         userId="${generator.jdbc.username}"
-                        password="${generator_jdbc_password}" />
+                        password="meiHouWang520" />
 
         <!-- model生成 -->
-        <javaModelGenerator targetPackage="${generator_javaModelGenerator_targetPackage}" targetProject="${targetProject}/src/main/java" />
+        <javaModelGenerator targetPackage="com.example.demo.dao.model" targetProject="D:/develop/spring-boot-scaffold/src/main/java" />
 
         <!-- MapperXML生成 -->
-        <sqlMapGenerator targetPackage="${generator_sqlMapGenerator_targetPackage}" targetProject="${targetProject_sqlMap}/src/main/java" />
+        <sqlMapGenerator targetPackage="com.example.demo.dao.mapper" targetProject="D:/develop/spring-boot-scaffold/src/main/java" />
 
         <!-- Mapper接口生成 -->
-        <javaClientGenerator targetPackage="${generator_javaClientGenerator_targetPackage}" targetProject="${targetProject}/src/main/java" type="XMLMAPPER" />
+        <javaClientGenerator targetPackage="com.example.demo.dao.mapper" targetProject="D:/develop/spring-boot-scaffold/src/main/java" type="XMLMAPPER" />
 
         <!-- 需要映射的表 -->
-        #foreach($table in $tables)
-            #if($last_insert_id_tables.containsKey($!table.table_name) == true)
-                <table tableName="$!table.table_name" domainObjectName="$!table.model_name">
-                    <generatedKey column="$!last_insert_id_tables.get($!table.table_name)" sqlStatement="MySql" identity="true"/>
-                </table>
-            #else
-                <table tableName="$!table.table_name" domainObjectName="$!table.model_name"></table>
-            #end
-        #end
-    </context>
+                                    <table tableName="user" domainObjectName="User"></table>
+                                                <table tableName="user_role" domainObjectName="UserRole"></table>
+                        </context>
 </generatorConfiguration>

@@ -133,6 +133,7 @@
             <artifactId>tomcat-juli</artifactId>
             <version>${tomcat.version}</version>
         </dependency>
+        <!--end tomcat-->
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
@@ -153,7 +154,22 @@
             <artifactId>ehcache</artifactId>
             <version>2.10.0</version>
         </dependency>
-        <!--end tomcat-->
+        <!--swagger2-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+        <!--end swagger2-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
 	</dependencies>
 
 	<build>

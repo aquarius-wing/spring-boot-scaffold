@@ -2,6 +2,7 @@
  package com.example.demo.query;
 
 import com.example.demo.common.dto.LeftJoinDTO;
+import com.example.demo.dao.model.User;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -121,6 +122,16 @@ public class UserRoleQuery {
         return this.role;
     }
 
+
+    private User user;
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
 
 }
 

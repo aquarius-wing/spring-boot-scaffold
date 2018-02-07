@@ -24,7 +24,7 @@ public class StringUtil {
         if (null == str || "".equals(str)) {
             return str;
         }
-        str = str.toLowerCase();
+        // str = str.toLowerCase();
         Matcher matcher = linePattern.matcher(str);
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {

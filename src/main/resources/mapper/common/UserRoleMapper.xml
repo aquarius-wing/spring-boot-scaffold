@@ -23,13 +23,29 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
     <![CDATA[
         INSERT INTO user_role (
-            user_role.id ,
-            user_role.uid ,
-            user_role.role 
+        <set>
+                <if test="id != null">
+                    user_role.id ,
+                </if>
+                <if test="uid != null">
+                    user_role.uid ,
+                </if>
+                <if test="role != null">
+                    user_role.role 
+                </if>
+        </set>
         ) VALUES (
-            #{id},
-            #{uid},
-            #{role}
+        <set>
+                <if test="id != null">
+                    #{id},
+                </if>
+                <if test="uid != null">
+                    #{uid},
+                </if>
+                <if test="role != null">
+                    #{role}
+                </if>
+        </set>
         )
     ]]>
     </insert>
