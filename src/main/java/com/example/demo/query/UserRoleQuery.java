@@ -2,7 +2,7 @@
  package com.example.demo.query;
 
 import com.example.demo.common.dto.LeftJoinDTO;
-import com.example.demo.dao.model.User;
+import com.example.demo.model.User;
 
 import java.util.Date;
 import java.util.HashMap;

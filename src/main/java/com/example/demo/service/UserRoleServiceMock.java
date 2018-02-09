@@ -7,7 +7,7 @@ import com.example.demo.dao.model.UserRoleExample;
 
 /**
 * 降级实现UserRoleService接口
-* Created by shuzheng on 2018/1/16.
+* Created by shuzheng on 2018/2/9.
 */
 public class UserRoleServiceMock extends BaseServiceMock<UserRoleMapper, UserRole, UserRoleExample> implements UserRoleService {
 

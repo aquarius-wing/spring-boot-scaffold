@@ -1,10 +1,6 @@
 package com.example.demo.web;
 
 import com.example.demo.common.dto.LeftJoinDTO;
-import com.example.demo.dao.mapper.UserMapper;
-import com.example.demo.dao.model.UserExample;
-import com.example.demo.query.UserQuery;
-import com.example.demo.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +10,10 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class UserController {
 
-    @Autowired
+    /*@Autowired
     private UserServiceImpl userService;
     @Autowired
-    private UserMapper userMapper;
+    private UserMapper userMapper;*/
 
 
     @RequestMapping(path = {"/"}, method = {RequestMethod.GET})
@@ -25,13 +21,13 @@ public class UserController {
         ModelAndView mv = new ModelAndView("index");
 
         // 在线条件
-        UserQuery query = new UserQuery().withStatus(1);
+        /*UserQuery query = new UserQuery().withStatus(1);
         // 左连接条件,必须是高级会员,即role为1
         LeftJoinDTO leftJoinDTO = new LeftJoinDTO("user_role","uid","user","id","role",1);
         query.withLeftJoinDTO(leftJoinDTO);
         UserExample userExample = new UserExample();
         userExample.createCriteria().andStatusEqualTo(1);
-        userService.selectByExample(userExample);
+        userService.selectByExample(userExample);*/
         return mv;
     }
 

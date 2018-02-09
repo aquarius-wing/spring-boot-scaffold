@@ -7,7 +7,7 @@ import com.example.demo.dao.model.UserExample;
 
 /**
 * 降级实现UserService接口
-* Created by shuzheng on 2018/1/16.
+* Created by shuzheng on 2018/2/9.
 */
 public class UserServiceMock extends BaseServiceMock<UserMapper, User, UserExample> implements UserService {
 
