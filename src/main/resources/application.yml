@@ -1,4 +1,6 @@
 spring:
+  aop:
+      auto: true
   mvc:
     view:
       suffix: .jsp
@@ -10,7 +12,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://localhost:3306/sbdemo?useUnicode=true&amp;characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
-    password: meiHouWang520
+    password: 123456
     driver-class-name: com.mysql.jdbc.Driver
     initialSize: 10
     minIdle: 1
@@ -24,13 +26,24 @@ spring:
     testOnReturn: false
     poolPreparedStatements: true
     maxPoolPreparedStatementPerConnectionSize: 20
-    filters: stat
+    filters: stat,log4j2
 
 mybatis:
-  type-aliases-package: com.example.demo.model
+  type-aliases-package: com.example.demo.dao.model
   config-location: classpath:spring-mybatis.xml
-  mapper-locations: classpath:mapper/*.xml
+  mapper-locations: classpath:com/example/demo/mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
 
 
 pagehelper:
   dialect: com.github.pagehelper.dialect.helper.MySqlDialect
+security:
+  basic:
+    path: /swagger-ui.html
+    enabled: true
+  user:
+    name: demo
+    password: demo
+
+
