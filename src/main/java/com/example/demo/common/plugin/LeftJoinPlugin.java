@@ -1,8 +1,12 @@
 package com.example.demo.common.plugin;
 
-import org.mybatis.generator.api.*;
+import org.mybatis.generator.api.IntrospectedTable;
+import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.*;
-import org.mybatis.generator.api.dom.xml.*;
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.Element;
+import org.mybatis.generator.api.dom.xml.TextElement;
+import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,10 +107,13 @@ public class LeftJoinPlugin  extends PluginAdapter {
      */
     @Override
     public boolean sqlMapBaseColumnListElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        TextElement textElement = (TextElement)element.getElements().get(0);
+        StringBuffer contentBf = new StringBuffer();
+        for (Element textElement : element.getElements()) {
+            contentBf.append(((TextElement)textElement).getContent());
+        }
 
         // 1.获取原有的内容然后加以修改
-        String content = textElement.getContent();
+        String content = contentBf.toString();
         content = getTableName(introspectedTable) + "." + content;
         content = content.replaceAll(", ",", "+getTableName(introspectedTable)+".");
 
