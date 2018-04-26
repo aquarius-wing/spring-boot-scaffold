@@ -22,6 +22,11 @@ public class UserRoleExample implements Serializable {
 	*/
     private LeftJoinDTO leftJoin;
 
+    /**
+	 * group by #{groupBy}
+	*/
+    private String groupBy;
+
     public UserRoleExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
@@ -88,6 +93,19 @@ public class UserRoleExample implements Serializable {
         return this;
     }
 
+    public void setGroupBy(String groupBy) {
+        this.groupBy = groupBy;
+    }
+
+    public String getGroupBy() {
+        return groupBy;
+    }
+
+    public UserRoleExample withGroupBy(String groupBy) {
+        this.groupBy = groupBy;
+        return this;
+    }
+
     protected abstract static class GeneratedCriteria implements Serializable {
         protected List<Criterion> criteria;
 
@@ -108,24 +126,30 @@ public class UserRoleExample implements Serializable {
             return criteria;
         }
 
-        protected void addCriterion(String condition) {
-            condition = "user_role." + condition;
+        public void addCriterion(String condition) {
+            if(!condition.contains(".")) {
+                condition = "user_role." + condition;
+            }
             if (condition == null) {
                 throw new RuntimeException("Value for condition cannot be null");
             }
             criteria.add(new Criterion(condition));
         }
 
-        protected void addCriterion(String condition, Object value, String property) {
-            condition = "user_role." + condition;
+        public void addCriterion(String condition, Object value, String property) {
+            if(!condition.contains(".")) {
+                condition = "user_role." + condition;
+            }
             if (value == null) {
                 throw new RuntimeException("Value for " + property + " cannot be null");
             }
             criteria.add(new Criterion(condition, value));
         }
 
-        protected void addCriterion(String condition, Object value1, Object value2, String property) {
-            condition = "user_role." + condition;
+        public void addCriterion(String condition, Object value1, Object value2, String property) {
+            if(!condition.contains(".")) {
+                condition = "user_role." + condition;
+            }
             if (value1 == null || value2 == null) {
                 throw new RuntimeException("Between values for " + property + " cannot be null");
             }

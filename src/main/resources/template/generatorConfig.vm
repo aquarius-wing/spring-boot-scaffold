@@ -24,6 +24,8 @@
         <!-- <plugin type="com.example.demo.common.plugin.PaginationPlugin"></plugin> -->
 
         <plugin type="com.example.demo.common.plugin.LeftJoinPlugin"></plugin>
+        <plugin type="com.example.demo.common.plugin.GroupByPlugin"></plugin>
+        <plugin type="com.example.demo.common.plugin.ModelWithMethod"></plugin>
 
         <!-- 生成在XML中的<cache>元素 -->
         <plugin type="org.mybatis.generator.plugins.CachePlugin">

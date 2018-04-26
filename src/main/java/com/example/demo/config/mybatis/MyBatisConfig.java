@@ -1,6 +1,8 @@
 package com.example.demo.config.mybatis;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.github.pagehelper.PageHelper;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import javax.annotation.Resource;
+import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
@@ -32,6 +35,13 @@ public class MyBatisConfig implements TransactionManagementConfigurer {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
 
+        Properties prop = new Properties();
+        prop.setProperty("dialect", "mysql");
+
+        PageHelper pageHelper = new PageHelper();
+        pageHelper.setProperties(prop);
+        Interceptor[] plugins = {pageHelper};
+        bean.setPlugins(plugins);
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {
             bean.setMapperLocations(resolver.getResources("classpath:com/example/demo/dao/mapper/**/*.xml"));

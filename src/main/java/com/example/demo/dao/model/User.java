@@ -9,14 +9,10 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * 
  * @author wing
- * @date 2018-02-20
+ * @date 2018-04-23
  */
 @ApiModel(value = "")
 public class User implements Serializable {
-    /**
-     * 描述: 主键id
-     * 字段: id  INTEGER (10)
-     */
     private Integer id;
 
     private String uname;
@@ -31,7 +27,6 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "主键id")
     public Integer getId() {
         return id;
     }
@@ -77,6 +72,26 @@ public class User implements Serializable {
         sb.append(", status=").append(status);
         sb.append("]");
         return sb.toString();
+    }
+
+    public User withId(Integer id) {
+        this.id = id;
+        return this;
+    }
+
+    public User withUname(String uname) {
+        this.uname = uname;
+        return this;
+    }
+
+    public User withPassword(String password) {
+        this.password = password;
+        return this;
+    }
+
+    public User withStatus(Integer status) {
+        this.status = status;
+        return this;
     }
 
     @Override

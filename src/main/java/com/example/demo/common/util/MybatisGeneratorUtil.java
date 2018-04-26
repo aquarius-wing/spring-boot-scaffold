@@ -81,10 +81,10 @@ public class MybatisGeneratorUtil {
 			JdbcUtil jdbcUtil = new JdbcUtil(jdbcDriver, jdbcUrl, jdbcUsername, AESUtil.aesDecode(jdbcPassword));
 			List<Map> result = jdbcUtil.selectByParams(sql, null);
 			for (Map map : result) {
-				System.out.println(map.get("table_name"));
+				System.out.println(map.get("TABLE_NAME"));
 				table = new HashMap<>(2);
-				table.put("table_name", map.get("table_name"));
-				table.put("model_name", lineToHump(ObjectUtils.toString(map.get("table_name"))));
+				table.put("table_name", map.get("TABLE_NAME"));
+				table.put("model_name", lineToHump(ObjectUtils.toString(map.get("TABLE_NAME"))));
 				tables.add(table);
 			}
 			jdbcUtil.release();
@@ -92,7 +92,7 @@ public class MybatisGeneratorUtil {
 			String targetProjectSqlMap =  basePath + (StringUtil.isEmpty(module) ? "" : module + "/" + module + "-rpc-service");
 			context.put("tables", tables);
 			context.put("generator_javaModelGenerator_targetPackage", packageName + ".dao.model");
-			context.put("generator_sqlMapGenerator_targetPackage", packageName + ".dao.mapper");
+			context.put("generator_sqlMapGenerator_targetPackage", packageName + ".dao.mapper.common");
 			context.put("generator_javaClientGenerator_targetPackage", packageName + ".dao.mapper");
 			context.put("targetProject", targetProject);
 			context.put("targetProject_sqlMap", targetProjectSqlMap);
@@ -101,8 +101,8 @@ public class MybatisGeneratorUtil {
 			VelocityUtil.generate(generatorConfig_vm, generatorConfigXml, context);
 			// 删除旧代码
 			deleteDir(new File(targetProject + "/src/main/java/" + packageName.replaceAll("\\.", "/") + "/dao/model"));
-			deleteDir(new File(targetProject + "/src/main/java/" + packageName.replaceAll("\\.", "/") + "/dao/mapper"));
-			deleteDir(new File(targetProjectSqlMap + "/src/main/java/" + packageName.replaceAll("\\.", "/") + "/dao/mapper"));
+			deleteDir(new File(targetProject + "/src/main/java/" + packageName.replaceAll("\\.", "/") + "/dao/mapper/common"));
+			deleteDir(new File(targetProjectSqlMap + "/src/main/java/" + packageName.replaceAll("\\.", "/") + "/dao/mapper/common"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -141,7 +141,7 @@ public class MybatisGeneratorUtil {
 				System.out.println(service);
 			}
 			// 生成serviceMock
-			File serviceMockFile = new File(serviceMock);
+			/*File serviceMockFile = new File(serviceMock);
 			if (!serviceMockFile.exists()) {
 				VelocityContext context = new VelocityContext();
 				context.put("package_name", packageName);
@@ -149,7 +149,7 @@ public class MybatisGeneratorUtil {
 				context.put("ctime", ctime);
 				VelocityUtil.generate(serviceMock_vm, serviceMock, context);
 				System.out.println(serviceMock);
-			}
+			}*/
 			// 生成serviceImpl
 			File serviceImplFile = new File(serviceImpl);
 			if (!serviceImplFile.exists()) {

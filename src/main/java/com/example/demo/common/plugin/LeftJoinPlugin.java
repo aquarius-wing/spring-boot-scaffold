@@ -33,13 +33,16 @@ public class LeftJoinPlugin  extends PluginAdapter {
 
         // 使得条件语句前面能够插入表名
         for (InnerClass innerClass : topLevelClass.getInnerClasses()) {
-            System.out.println("-----------modelExampleClassGenerated:");
+            System.out.println("-----------modelExampleClassGenerated:"+innerClass.getType().getShortName());
             if(innerClass.getType().getShortName().equals("GeneratedCriteria")){
                 for (Method method : innerClass.getMethods()) {
                     if(method.getName().startsWith("addCriterion")){
                         // 形如andUserIdIsNull
                         System.out.println(method.getName()+":\t"+method.getBodyLines());
-                        method.addBodyLine(0,"condition = \""+getTableName(introspectedTable)+".\" + condition;");
+                        method.setVisibility(JavaVisibility.PUBLIC);
+                        method.addBodyLine(0,"if(!condition.contains(\".\")) {");
+                        method.addBodyLine(1,"condition = \""+getTableName(introspectedTable)+".\" + condition;");
+                        method.addBodyLine(2,"}");
                     }
                 }
             }
@@ -91,7 +94,7 @@ public class LeftJoinPlugin  extends PluginAdapter {
     @Override
     public boolean sqlMapExampleWhereClauseElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         XmlElement afterWhere = new XmlElement("if");
-        afterWhere.addAttribute(new Attribute("test", "leftJoin != null"));
+        afterWhere.addAttribute(new Attribute("test", "leftJoin != null and leftJoin.targetColumn != null"));
         afterWhere.addElement(new TextElement("and ${leftJoin.leftTableName}.${leftJoin.targetColumn} = #{leftJoin.targetValue}"));
 
         XmlElement elementWhere = (XmlElement) element.getElements().get(0);
@@ -109,7 +112,7 @@ public class LeftJoinPlugin  extends PluginAdapter {
     public boolean sqlMapBaseColumnListElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         StringBuffer contentBf = new StringBuffer();
         for (Element textElement : element.getElements()) {
-            contentBf.append(((TextElement)textElement).getContent());
+            contentBf.append(((TextElement) textElement).getContent());
         }
 
         // 1.获取原有的内容然后加以修改
