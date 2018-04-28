@@ -69,8 +69,8 @@
         #foreach($table in $tables)
             #if($last_insert_id_tables.containsKey($!table.table_name) == true)
                 <table tableName="$!table.table_name" domainObjectName="$!table.model_name">
-                    <generatedKey column="$!last_insert_id_tables.get($!table.table_name)" sqlStatement="MySql" identity="true"/>
                     <property name="useActualColumnNames" value="true"/>
+                    <generatedKey column="$!last_insert_id_tables.get($!table.table_name)" sqlStatement="MySql" identity="true"/>
                 </table>
             #else
                 <table tableName="$!table.table_name" domainObjectName="$!table.model_name">

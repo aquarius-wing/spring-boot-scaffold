@@ -20,7 +20,7 @@ public class UserExample implements Serializable {
 	 * where
 	 *      AND #{leftTableName}.#{targetColumn} = #{targetValue}
 	*/
-    private LeftJoinDTO leftJoin;
+    private List<LeftJoinDTO> leftJoinDTOList;
 
     /**
 	 * group by #{groupBy}
@@ -29,6 +29,7 @@ public class UserExample implements Serializable {
 
     public UserExample() {
         oredCriteria = new ArrayList<Criteria>();
+        leftJoinDTOList = new ArrayList<LeftJoinDTO>();
     }
 
     public void setOrderByClause(String orderByClause) {
@@ -75,21 +76,21 @@ public class UserExample implements Serializable {
     }
 
     public void clear() {
+        leftJoinDTOList.clear();
         oredCriteria.clear();
         orderByClause = null;
         distinct = false;
     }
 
-    public void setLeftJoin(LeftJoinDTO leftJoin) {
-        this.leftJoin = leftJoin;
-    }
-
-    public LeftJoinDTO getLeftJoin() {
-        return leftJoin;
+    public List<LeftJoinDTO> getLeftJoinDTOList() {
+        return leftJoinDTOList;
     }
 
     public UserExample withLeftJoin(LeftJoinDTO leftJoin) {
-        this.leftJoin = leftJoin;
+        if(null == this.leftJoinDTOList){
+            this.leftJoinDTOList = new ArrayList<>();
+        }
+        this.leftJoinDTOList.add(leftJoin);
         return this;
     }
 

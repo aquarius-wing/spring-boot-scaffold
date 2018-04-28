@@ -1,0 +1,14 @@
+package ${package_name}.dao.mapper;
+
+import ${package_name}.dao.mapper.common.${model}Mapper;
+import ${package_name}.dao.model.${model};
+import ${package_name}.dao.model.${model}Example;
+import ${package_name}.service.${model}Service;
+
+/**
+* ${model}Mapper继承
+* Created by Wing on ${ctime}.
+*/
+public interface ${model}MapperExtend extends ${model}Mapper{
+
+}

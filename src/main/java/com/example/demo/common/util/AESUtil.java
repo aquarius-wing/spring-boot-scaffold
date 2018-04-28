@@ -17,7 +17,7 @@ import java.security.SecureRandom;
  */
 public class AESUtil {
 
-    private static final String ENCODE_RULES = "zheng";
+    private static final String ENCODE_RULES = "gniw";
 
     /**
      * 加密
@@ -129,7 +129,7 @@ public class AESUtil {
 
     public static void main(String[] args) {
         String[] keys = {
-                "", "myf27256134"
+                "", "123456"
         };
         System.out.println("key | AESEncode | AESDecode");
         for (String key : keys) {

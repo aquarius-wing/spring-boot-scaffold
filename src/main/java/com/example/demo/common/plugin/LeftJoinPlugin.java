@@ -47,6 +47,17 @@ public class LeftJoinPlugin  extends PluginAdapter {
                 }
             }
         }
+        for (Method method : topLevelClass.getMethods()) {
+            // 如果等于ConfExample
+            if(method.getName().equals(topLevelClass.getType().getShortName())){
+                // ConfExample()里加入初始化leftJoinDTOList
+                method.addBodyLine("leftJoinDTOList = new ArrayList<LeftJoinDTO>();");
+            }
+            if(method.getName().equals("clear")){
+                // clear()里加入leftJoinDTOList.clear()
+                method.addBodyLine(0,"leftJoinDTOList.clear();");
+            }
+        }
 
         return true;
     }
@@ -69,10 +80,15 @@ public class LeftJoinPlugin  extends PluginAdapter {
             if(subElement.getClass().equals(TextElement.class)){
                 String content = ((TextElement)subElement).getContent();
                 if(content.startsWith("from")) {
-                    XmlElement afterWhere = new XmlElement("if");
-                    afterWhere.addAttribute(new Attribute("test", "leftJoin != null"));
-                    afterWhere.addElement(new TextElement("left join ${leftJoin.leftTableName} on ${leftJoin.leftTableName}.${leftJoin.leftColumn} = ${leftJoin.rightTableName}.${leftJoin.rightColumn}"));
+                    XmlElement afterForEach = new XmlElement("if");
+                    afterForEach.addAttribute(new Attribute("test", "leftJoin != null"));
+                    afterForEach.addElement(new TextElement("left join ${leftJoin.leftTableName} on ${leftJoin.leftTableName}.${leftJoin.leftColumn} = ${leftJoin.rightTableName}.${leftJoin.rightColumn}"));
 
+                    // <foreach collection="leftJoinDTOList" item="leftJoin">
+                    XmlElement afterWhere = new XmlElement("foreach");
+                    afterWhere.addAttribute(new Attribute("collection", "leftJoinDTOList"));
+                    afterWhere.addAttribute(new Attribute("item", "leftJoin"));
+                    afterWhere.addElement(afterForEach);
 
                     element.addElement(i + 1, new XmlElement(afterWhere));
                 }
@@ -93,9 +109,25 @@ public class LeftJoinPlugin  extends PluginAdapter {
      */
     @Override
     public boolean sqlMapExampleWhereClauseElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        XmlElement afterWhere = new XmlElement("if");
-        afterWhere.addAttribute(new Attribute("test", "leftJoin != null and leftJoin.targetColumn != null"));
-        afterWhere.addElement(new TextElement("and ${leftJoin.leftTableName}.${leftJoin.targetColumn} = #{leftJoin.targetValue}"));
+        /*
+            <if test="leftJoin != null and leftJoin.targetColumn != null">
+              and ${leftJoin.leftTableName}.${leftJoin.targetColumn} = #{leftJoin.targetValue}
+            </if>
+         */
+        XmlElement afterForEach = new XmlElement("if");
+        afterForEach.addAttribute(new Attribute("test", "leftJoin != null and leftJoin.targetColumn != null"));
+        afterForEach.addElement(new TextElement("and ${leftJoin.leftTableName}.${leftJoin.targetColumn} = #{leftJoin.targetValue}"));
+
+        // <foreach collection="leftJoinDTOList" item="leftJoin">
+        XmlElement afterWhere = new XmlElement("foreach");
+        if("Update_By_Example_Where_Clause".equals(element.getAttributes().get(0).getValue())){
+            // 这里要加example前缀是因为接口方法中使用了@Param定义example
+            afterWhere.addAttribute(new Attribute("collection", "example.leftJoinDTOList"));
+        }else{
+            afterWhere.addAttribute(new Attribute("collection", "leftJoinDTOList"));
+        }
+        afterWhere.addAttribute(new Attribute("item", "leftJoin"));
+        afterWhere.addElement(afterForEach);
 
         XmlElement elementWhere = (XmlElement) element.getElements().get(0);
         elementWhere.addElement(afterWhere);
@@ -131,9 +163,11 @@ public class LeftJoinPlugin  extends PluginAdapter {
     }
 
     private void generatorLeftJoinField(TopLevelClass topLevelClass){
-        FullyQualifiedJavaType fullyQualifiedJavaType = new FullyQualifiedJavaType("com.example.demo.common.dto.LeftJoinDTO");
+        FullyQualifiedJavaType fullyQualifiedJavaType = new FullyQualifiedJavaType("java.util.List");
+        fullyQualifiedJavaType.addTypeArgument(new FullyQualifiedJavaType("LeftJoinDTO"));
 
-        String s = "leftJoin";
+        // 创建属性对象
+        String s = "leftJoinDTOList";
         Field f = new Field();
         f.setName(s);
         f.setVisibility(JavaVisibility.PRIVATE);
@@ -145,17 +179,13 @@ public class LeftJoinPlugin  extends PluginAdapter {
         stringBuffer.append("\t *      AND #{leftTableName}.#{targetColumn} = #{targetValue}\n");
         stringBuffer.append("\t*/");
         f.addJavaDocLine(stringBuffer.toString());
+        // 添加属性
         topLevelClass.addField(f);
-
+        // 添加属性的引用
         topLevelClass.addImportedType(fullyQualifiedJavaType);
+        topLevelClass.addImportedType("com.example.demo.common.dto.LeftJoinDTO");
 
-        Method setMethod = new Method();
-        setMethod.setVisibility(JavaVisibility.PUBLIC);
-        setMethod.setName("set"+s.substring(0,1).toUpperCase()+s.substring(1));
-        setMethod.addParameter(new Parameter(fullyQualifiedJavaType, s));
-        setMethod.addBodyLine("this."+s+" = "+s+";");
-        topLevelClass.addMethod(setMethod);
-
+        // get方法
         Method getMethod = new Method();
         getMethod.setVisibility(JavaVisibility.PUBLIC);
         getMethod.setReturnType(fullyQualifiedJavaType);
@@ -163,13 +193,24 @@ public class LeftJoinPlugin  extends PluginAdapter {
         getMethod.addBodyLine("return "+s+";");
         topLevelClass.addMethod(getMethod);
 
+        // 创建with方法
         Method withMethod = new Method();
+        String objName = "leftJoin";
+        // 可见模式为public
         withMethod.setVisibility(JavaVisibility.PUBLIC);
+        // 返回类型为本类
         withMethod.setReturnType(topLevelClass.getType());
-        withMethod.setName("with"+s.substring(0,1).toUpperCase()+s.substring(1));
-        withMethod.addParameter(new Parameter(fullyQualifiedJavaType, s));
-        withMethod.addBodyLine("this."+s+" = "+s+";");
+        // 方法名:withLeftJoin
+        withMethod.setName("with"+objName.substring(0,1).toUpperCase()+objName.substring(1));
+        // 参数为LeftJoinDTO leftJoin
+        withMethod.addParameter(new Parameter(new FullyQualifiedJavaType("LeftJoinDTO"), objName));
+        // 函数体
+        withMethod.addBodyLine("if(null == this."+s+"){");
+        withMethod.addBodyLine("this."+s+" = new ArrayList<>();");
+        withMethod.addBodyLine("}");
+        withMethod.addBodyLine("this."+s+".add("+objName+");");
         withMethod.addBodyLine("return this;");
+        // 添加with方法
         topLevelClass.addMethod(withMethod);
     }
 

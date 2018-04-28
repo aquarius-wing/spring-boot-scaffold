@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * 
  * @author wing
- * @date 2018-04-23
+ * @date 2018-04-28
  */
 @ApiModel(value = "")
 public class UserRole implements Serializable {

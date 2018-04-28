@@ -25,6 +25,8 @@ public class MybatisGeneratorUtil {
 	private static String generatorConfig_vm = "/template/generatorConfig.vm";
 	// Service模板路径
 	private static String service_vm = "/template/Service.vm";
+	// Service模板路径
+	private static String mapper_vm = "/template/MapperExtend.vm";
 	// ServiceMock模板路径
 	private static String serviceMock_vm = "/template/ServiceMock.vm";
 	// ServiceImpl模板路径
