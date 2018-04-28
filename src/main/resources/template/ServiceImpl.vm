@@ -19,11 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @BaseService
-public class ${model}ServiceImpl extends BaseServiceImpl<${model}Mapper, ${model}, ${model}Example> implements ${model}Service {
+public class ${model}ServiceImpl extends BaseServiceImpl<${model}MapperExtend, ${model}, ${model}Example> implements ${model}Service {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(${model}ServiceImpl.class);
 
     @Autowired
-    ${model}Mapper ${mapper}Mapper;
+    ${model}MapperExtend ${mapper}MapperExtend;
 
 }

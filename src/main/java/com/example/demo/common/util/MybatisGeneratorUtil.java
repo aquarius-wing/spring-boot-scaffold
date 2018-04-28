@@ -25,8 +25,10 @@ public class MybatisGeneratorUtil {
 	private static String generatorConfig_vm = "/template/generatorConfig.vm";
 	// Service模板路径
 	private static String service_vm = "/template/Service.vm";
-	// Service模板路径
+	// Mapper模板路径
 	private static String mapper_vm = "/template/MapperExtend.vm";
+	// MapperXml模板路径
+	private static String mapperXml_vm = "/template/MapperXml.vm";
 	// ServiceMock模板路径
 	private static String serviceMock_vm = "/template/ServiceMock.vm";
 	// ServiceImpl模板路径
@@ -95,7 +97,7 @@ public class MybatisGeneratorUtil {
 			context.put("tables", tables);
 			context.put("generator_javaModelGenerator_targetPackage", packageName + ".dao.model");
 			context.put("generator_sqlMapGenerator_targetPackage", packageName + ".dao.mapper.common");
-			context.put("generator_javaClientGenerator_targetPackage", packageName + ".dao.mapper");
+			context.put("generator_javaClientGenerator_targetPackage", packageName + ".dao.mapper.common");
 			context.put("targetProject", targetProject);
 			context.put("targetProject_sqlMap", targetProjectSqlMap);
 			context.put("generator_jdbc_password", AESUtil.aesDecode(jdbcPassword));
@@ -122,6 +124,36 @@ public class MybatisGeneratorUtil {
 			System.out.println(warning);
 		}
 		System.out.println("========== 结束运行MybatisGenerator ==========");
+
+        System.out.println("========== 开始生成Mapper ==========");
+        String ctime1 = new SimpleDateFormat("yyyy/M/d").format(new Date());
+        String mapperPath = basePath + (StringUtil.isEmpty(module)? "" :(module + "/" + module + "-rpc-api")) + "/src/main/java/" + packageName.replaceAll("\\.", "/") + "/dao/mapper";
+        for (int i = 0; i < tables.size(); i++) {
+            String model = lineToHump(ObjectUtils.toString(tables.get(i).get("table_name")));
+            String mapper = mapperPath + "/" + model + "MapperExtend.java";
+			String mapperXml = mapperPath + "/" + model + "MapperExtend.xml";
+            // 生成mapper
+            File mapperFile = new File(mapper);
+            if (!mapperFile.exists()) {
+                VelocityContext context = new VelocityContext();
+                context.put("package_name", packageName);
+                context.put("model", model);
+                context.put("ctime", ctime1);
+                VelocityUtil.generate(mapper_vm, mapper, context);
+                System.out.println(mapper);
+            }
+			// 生成mapper xml
+			File mapperXmlFile = new File(mapperXml);
+			if (!mapperXmlFile.exists()) {
+				VelocityContext context = new VelocityContext();
+				context.put("package_name", packageName);
+				context.put("model", model);
+				context.put("ctime", ctime1);
+				VelocityUtil.generate(mapperXml_vm, mapperXml, context);
+				System.out.println(mapper);
+			}
+        }
+        System.out.println("========== 结束生成Mapper ==========");
 
 		System.out.println("========== 开始生成Service ==========");
 		String ctime = new SimpleDateFormat("yyyy/M/d").format(new Date());

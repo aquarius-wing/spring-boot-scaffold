@@ -1,4 +1,4 @@
-package com.example.demo.dao.mapper;
+package com.example.demo.dao.mapper.common;
 
 import com.example.demo.dao.model.User;
 import com.example.demo.dao.model.UserExample;
@@ -27,7 +27,4 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
-
-    List<User> searchUserName(String uname);
-
 }

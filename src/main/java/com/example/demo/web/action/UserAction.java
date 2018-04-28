@@ -3,7 +3,7 @@ package com.example.demo.web.action;
 
 import com.example.demo.common.dto.LeftJoinDTO;
 import com.example.demo.common.dto.ResultDTO;
-import com.example.demo.dao.mapper.UserMapper;
+import com.example.demo.dao.mapper.UserMapperExtend;
 import com.example.demo.dao.model.User;
 import com.example.demo.dao.model.UserExample;
 import com.example.demo.service.impl.UserServiceImpl;
@@ -21,7 +21,7 @@ public class UserAction {
     private UserServiceImpl userService;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserMapperExtend userMapperExtend;
 
     @GetMapping(path = {"/"})
     public ResultDTO index(){
@@ -43,7 +43,7 @@ public class UserAction {
 
     @GetMapping("searchUserList")
     public ResultDTO<List<User>> getUserList(String uname){
-        return ResultDTO.success(userMapper.searchUserName(uname));
+        return ResultDTO.success(userMapperExtend.searchUserName(uname));
     }
 }
 

@@ -2,7 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.common.annotation.BaseService;
 import com.example.demo.common.base.BaseServiceImpl;
-import com.example.demo.dao.mapper.UserMapper;
+import com.example.demo.dao.mapper.UserMapperExtend;
 import com.example.demo.dao.model.User;
 import com.example.demo.dao.model.UserExample;
 import com.example.demo.service.UserService;
@@ -19,11 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @BaseService
-public class UserServiceImpl extends BaseServiceImpl<UserMapper, User, UserExample> implements UserService {
+public class UserServiceImpl extends BaseServiceImpl<UserMapperExtend, User, UserExample> implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
-    UserMapper userMapper;
+    UserMapperExtend userMapperExtend;
 
 }

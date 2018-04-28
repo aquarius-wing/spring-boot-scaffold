@@ -1,4 +1,4 @@
-package com.example.demo.dao.mapper;
+package com.example.demo.dao.mapper.common;
 
 import com.example.demo.dao.model.UserRole;
 import com.example.demo.dao.model.UserRoleExample;
